@@ -1,0 +1,10 @@
+---
+- name: Start Verus Release Testing
+  hosts: "{{ variable_host | default('web') }}"
+  become: false
+  tasks:
+    - name: Start verus
+      shell: "/usr/bin/screen -dmS releasetest bash -c 'cd /home/mylo/verus-cli/; ./verusd -chain=vrsctest ; exec bash'"
+      ignore_errors: yes
+      changed_when: false
+

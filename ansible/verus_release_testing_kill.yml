@@ -1,0 +1,20 @@
+# from https://superuser.com/a/1086075
+- name: verusd kill
+  hosts: "{{ variable_host | default('web') }}"
+  become: false
+  tasks:
+    - name: Killing verusd
+      # shell: "ps aux | grep iguana | grep -v \"SCREEN\\|grep\" | cat"
+      shell: "pkill -15 verusd" 
+      ignore_errors: yes
+      changed_when: false
+      register: verusd_status
+    - name: Debug status of verusd (stdout)
+      debug:
+        msg: |
+          verusd status var is {{verusd_status.stdout}}
+          #    - shell: echo notrunning > {{ansible_env.HOME}}/running.txt
+    - name: Killing all screen sessions named releasetest
+      shell: "screen -ls releasetest  | grep -E '\\s+[0-9]+\\.' | awk -F ' ' '{print $1}' | while read s; do screen -XS $s quit; done"
+      ignore_errors: yes
+

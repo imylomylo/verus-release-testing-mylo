@@ -1,0 +1,26 @@
+---
+- name: Download Release Testing VRSC
+  hosts: "{{ variable_host | default('web') }}"
+  become: false
+  tasks:
+    - name: Make directories for bootstrap download an unarchive
+      file: 
+        path: "{{ansible_env.HOME}}/downloads"
+        state: directory
+
+    - name: Make .komodo directory for blockchain data 
+      file:
+        path: "{{ansible_env.HOME}}/.komodo/VRSC"
+        state: directory
+
+    - name: Download release build
+      args:
+        chdir: "{{ansible_env.HOME}}/downloads"
+      shell: wget -N 'https://storage.googleapis.com/veruscoin/Verus-CLI-Linux-v0.7.3-9-rc2-x86_64.tar.gz'
+
+    - name: Unarchive executable
+      unarchive: 
+        src="{{ansible_env.HOME}}/downloads/Verus-CLI-Linux-v0.7.3-9-rc2-x86_64.tar.gz"
+        dest="{{ansible_env.HOME}}/"
+        copy=no
+    

@@ -1,0 +1,21 @@
+---
+- name: zcash params
+  hosts: "{{ variable_host | default('web') }}"
+  become: false
+  tasks:
+    - name: Download fetch-params-alt.sh
+      args:
+        chdir: "{{ansible_env.HOME}}/"
+      shell: wget -N 'https://raw.githubusercontent.com/KomodoPlatform/komodo/master/zcutil/fetch-params-alt.sh'
+    - file:
+        path: "{{ansible_env.HOME}}/fetch-params-alt.sh"
+        owner: mylo
+        group: mylo
+        mode: 0700
+    - name: Fetch zcash params
+      shell: ./fetch-params-alt.sh
+      args:
+        chdir: "{{ansible_env.HOME}}"
+
+
+# variable_host from https://stackoverflow.com/a/33234120
